@@ -1,0 +1,11 @@
+{
+  "author": "MonSSteRFF",
+  "license": "ISC",
+  "name": "restaurant",
+  "description": "fullstack application with nest + react for restaurants owners, workers and users",
+  "scripts": {
+    "server:dev": "cd ./server & npm run start:dev",
+    "client:dev": "cd ./client & npm run dev",
+    "dev": "npm run server:dev | npm run client:dev"
+  }
+}

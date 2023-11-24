@@ -1,10 +1,7 @@
 {
-  "name": "nest-restourant",
+  "name": "nest-restaurant",
   "version": "0.0.1",
-  "description": "",
-  "author": "MonSSteRFF",
   "private": true,
-  "license": "ISC",
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
@@ -17,8 +14,7 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json",
-    "prisma_migrate": "npx prisma migrate"
+    "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",

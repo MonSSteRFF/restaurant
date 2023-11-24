@@ -4,7 +4,7 @@
   "license": "ISC",
   "scripts": {
     "dev": "rm -rf ./dev-dist && vite",
-    "build": "rm -rf ./dist && tsc && vite build",
+    "build": "rm -rf ./dist && vite build",
     "serve": "vite preview",
     "generate-pwa-assets": "pwa-assets-generator --preset minimal public/icons/favicon.svg"
   },
