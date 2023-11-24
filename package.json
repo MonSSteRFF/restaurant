@@ -5,7 +5,15 @@
   "description": "fullstack application with nest + react for restaurants owners, workers and users",
   "scripts": {
     "server:dev": "cd ./server & npm run start:dev",
+    "server:prod": "cd ./server & npx prisma db push & npm run build & npm run start:prod",
+
     "client:dev": "cd ./client & npm run dev",
-    "dev": "npm run server:dev | npm run client:dev"
+    "client:prod": "cd ./client & npm run build & npm run serve",
+
+    "dev": "npm run server:dev | npm run client:dev",
+    "prod": "npm run server:prod | npm run client:prod",
+
+    "docker": "docker-compose up",
+    "docker:server": "docker-compose up server"
   }
 }

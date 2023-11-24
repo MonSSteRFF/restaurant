@@ -13,5 +13,9 @@ services:
     build:
       context: ./server
       dockerfile: Dockerfile
+    volumes:
+      - database:/app/prisma/database
     ports:
       - "4000:4000"
+volumes:
+  database:

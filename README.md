@@ -2,20 +2,30 @@
 fullstack application with nest + react for restaurants owners, workers and users
 
 
-## docker
+## before start project
 
-start client/server `docker-compose up`
+1. create .env file in ./server/ with params
 
-start server only
-```bash
-$ cd server
-$ docker build -t restaurant-server .
-$ docker run restaurant-server
-```
+        JWT_SECRET_ACCESS_CODE="your_secret_key_number_1"
+        JWT_SECRET_REFRESH_CODE="your_secret_key_number_2"
+        DATABASE_URL="file:./database/dev.db"
 
-start client only (client dosent work without server)
-```bash
-$ cd client
-$ docker build -t restaurant-client .
-$ docker run restaurant-client
-```
+
+
+
+## start in docker
+
+- start client/server `npm run docker`
+- start server only `npm run docker:server`
+
+
+## start in local
+
+### dev mode
+- client and server `npm run dev`
+- server only `npm run server:dev`
+- client only `npm run client:dev`
+
+### prod mode
+
+

@@ -6,9 +6,6 @@
 /auth/refresh/ - refresh tokens by refresh_token\
 /auth/guarded/ - guarded Authorization `Bearer access_token` and user role
 
-###
-
-
 ## Installation
 
 ```bash

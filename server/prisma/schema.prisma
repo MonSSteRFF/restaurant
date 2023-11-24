@@ -15,6 +15,8 @@ model User {
   login        String
   email        String @unique
   password     String
+  unique123123 String @default("unique123123")
+  unique322322 String @default("unique322322")
   role         String @default("USER")
   refreshToken String @default("")
 }
