@@ -3,7 +3,8 @@ WORKDIR /app
 COPY . .
 RUN npm ci
 
-EXPOSE 4000
+
+EXPOSE 8080
 
 RUN echo "#!/bin/sh" > entrypoint.sh
 RUN echo "npx prisma db push" >> entrypoint.sh

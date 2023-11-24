@@ -81,13 +81,13 @@ export default defineConfig({
     }),
   ],
   server: {
-    port: 3000,
+    port: 80,
     host: '127.0.0.1',
   },
   preview: {
     host: true,
     strictPort: true,
-    port: 3000,
+    port: 80,
   },
 });
 

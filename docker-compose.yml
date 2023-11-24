@@ -5,7 +5,7 @@ services:
       context: ./client
       dockerfile: Dockerfile
     ports:
-      - "3000:3000"
+      - "80:80"
     depends_on:
       - server
 
@@ -16,6 +16,6 @@ services:
     volumes:
       - database:/app/prisma/database
     ports:
-      - "4000:4000"
+      - "8080:8080"
 volumes:
   database:
