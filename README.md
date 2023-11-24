@@ -27,5 +27,7 @@ fullstack application with nest + react for restaurants owners, workers and user
 - client only `npm run client:dev`
 
 ### prod mode
-
+- client and server `npm run prod`
+- server only `npm run server:prod`
+- client only `npm run client:prod`
 
