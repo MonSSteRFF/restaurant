@@ -1,11 +1,18 @@
-import { Body, Controller, Get, Post, UseGuards, Req } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  UseGuards,
+  Req,
+  Param,
+  BadRequestException,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AccessTokenGuard } from '../common/jwtGuard/accessToken.guard';
 import { RefreshTokenGuard } from '../common/jwtGuard/refreshToken.guard';
-import { LoginUserDto, RegisterUserDto } from './auth.dto';
+import { LoginUserDto, RegisterUserDto, RegisterUserRoleDto } from './auth.dto';
 import { Request } from 'express';
-import { Role } from '../common/roleGuard/role.enum';
-import { Roles } from '../common/roleGuard/roles.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -16,9 +23,18 @@ export class AuthController {
     return this.authService.login(dto);
   }
 
-  @Post('register')
-  register(@Body() dto: RegisterUserDto) {
-    return this.authService.register(dto);
+  @Post('register/:role')
+  register(@Body() dto: RegisterUserDto, @Param() params: RegisterUserRoleDto) {
+    if (
+      params.role === 'ADMIN' &&
+      dto.additionalPassword !== process.env.CREATE_ADMIN_SECRET_KEY
+    ) {
+      throw new BadRequestException(
+        'You cannot create admin user without additionalPassword',
+      );
+    }
+
+    return this.authService.register(dto, params.role);
   }
 
   @UseGuards(AccessTokenGuard)
@@ -33,11 +49,5 @@ export class AuthController {
     const userId = req.user['id'];
     const refreshToken = req.user['refreshToken'];
     return this.authService.refreshToken(userId, refreshToken);
-  }
-
-  @Roles([Role.USER])
-  @Get('guarded')
-  guarded() {
-    return 'guarded heh !';
   }
 }

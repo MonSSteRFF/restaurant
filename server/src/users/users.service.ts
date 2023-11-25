@@ -1,17 +1,19 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { DatabaseService } from '../database/database.service';
 import { CreateUserDto, FindUserByDto, UpdateUserDto } from './users.dto';
+import { Role } from '../common/roleGuard/role.enum';
 
 @Injectable()
 export class UsersService {
   constructor(private readonly databaseService: DatabaseService) {}
 
-  async create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto, role: Role) {
     return this.databaseService.user.create({
       data: {
         email: createUserDto.email,
         login: createUserDto.login,
         password: createUserDto.password,
+        role: role,
       },
     });
   }
@@ -28,6 +30,7 @@ export class UsersService {
     if (user === null) {
       throw new ForbiddenException(`Cannot find user with id: ${id}`);
     }
+
     return user;
   }
 

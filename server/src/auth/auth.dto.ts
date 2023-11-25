@@ -1,4 +1,12 @@
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import {
+  IsDefined,
+  IsEmail,
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
+import { Role } from '../common/roleGuard/role.enum';
 
 export class RegisterUserDto {
   @IsEmail()
@@ -10,6 +18,16 @@ export class RegisterUserDto {
   @IsString()
   @IsNotEmpty()
   password: string;
+
+  @IsString()
+  @IsOptional()
+  additionalPassword?: string;
+}
+
+export class RegisterUserRoleDto {
+  @IsNotEmpty()
+  @IsEnum(Role)
+  role: Role;
 }
 
 export class LoginUserDto {

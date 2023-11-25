@@ -11,12 +11,27 @@ datasource db {
 }
 
 model User {
-  id           Int    @id @default(autoincrement())
+  id           Int          @id @default(autoincrement())
   login        String
-  email        String @unique
+  email        String       @unique
   password     String
-  unique123123 String @default("unique123123")
-  unique322322 String @default("unique322322")
-  role         String @default("USER")
-  refreshToken String @default("")
+  role         String
+  refreshToken String       @default("")
+  Restaurant   Restaurant[]
+}
+
+model Restaurant {
+  id Int @id @default(autoincrement())
+
+  name String @unique
+  tag  String
+
+  sale        String @default("")
+  rank        Int    @default(0)
+  reviewCount Int    @default(0)
+  time        Int    @default(0)
+  price       Int    @default(0)
+
+  ownerUserId User @relation(fields: [userId], references: [id])
+  userId      Int
 }

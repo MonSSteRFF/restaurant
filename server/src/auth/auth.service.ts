@@ -8,6 +8,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as crypto from 'crypto';
 import { LoginUserDto, RegisterUserDto } from './auth.dto';
 import * as process from 'process';
+import { Role } from '../common/roleGuard/role.enum';
 
 @Injectable()
 export class AuthService {
@@ -16,7 +17,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async register(createUserDto: RegisterUserDto) {
+  async register(createUserDto: RegisterUserDto, role: Role) {
     const oldUser = await this.usersService.findBy({
       email: createUserDto.email,
       login: createUserDto.login,
@@ -28,10 +29,13 @@ export class AuthService {
       );
     }
 
-    const user = await this.usersService.create({
-      ...createUserDto,
-      password: this.encryptString(createUserDto.password),
-    });
+    const user = await this.usersService.create(
+      {
+        ...createUserDto,
+        password: this.encryptString(createUserDto.password),
+      },
+      role,
+    );
     const tokens = await this.getTokens(user.id, user.login);
     await this.updateRefreshToken(user.id, tokens.refresh_token);
     return tokens;
