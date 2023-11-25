@@ -6,6 +6,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 export enum Tags {
   burgers = 'burgers',
@@ -96,15 +97,29 @@ export interface Restaurant {
 }
 
 export class getAllRestaurantsQueryDto {
+  @ApiProperty({ example: 5, required: false })
   limit?: number;
+  @ApiProperty({ example: 0, required: false })
   skip?: number;
+  @ApiProperty({ example: 'name of restaurant', required: false })
   search?: string;
+  @ApiProperty({ example: 'sushi,burgers', required: false })
   tag?: string;
   @IsEnum(SortType)
   @IsOptional()
-  sort?: string;
+  @ApiProperty({
+    enum: ['byRanked', 'fastest', 'low_price', 'high_price'],
+    example: 'low_price',
+    required: false,
+  })
+  sort?: SortType;
   @IsEnum(SaleType)
   @IsOptional()
+  @ApiProperty({
+    enum: ['sales', 'free_delivery'],
+    example: 'free_delivery',
+    required: false,
+  })
   sale?: SaleType;
 }
 
@@ -126,10 +141,11 @@ export class getAllRestaurantsData {
 export class createRestaurantDto {
   @IsString()
   @IsNotEmpty()
+  @ApiProperty({ example: 'name_of_your_restaurant' })
   name: string;
-
   @IsArray()
   @IsNotEmpty()
+  @ApiProperty({ isArray: true, enum: TagsArray })
   tag: Tags[];
 }
 export class createRestaurantData {
@@ -147,6 +163,7 @@ export class createRestaurantData {
 export class removeRestaurantDto {
   @IsNumber()
   @IsNotEmpty()
+  @ApiProperty({ example: 1 })
   removeId: number;
 }
 

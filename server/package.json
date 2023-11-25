@@ -1,6 +1,6 @@
 {
   "name": "nest-restaurant",
-  "version": "0.0.1",
+  "version": "0.1",
   "private": true,
   "scripts": {
     "build": "nest build",
@@ -23,6 +23,7 @@
     "@nestjs/jwt": "^10.2.0",
     "@nestjs/passport": "^10.0.2",
     "@nestjs/platform-express": "^10.0.0",
+    "@nestjs/swagger": "^7.1.16",
     "@prisma/client": "^5.6.0",
     "passport-jwt": "^4.0.1",
     "prisma": "^5.6.0",

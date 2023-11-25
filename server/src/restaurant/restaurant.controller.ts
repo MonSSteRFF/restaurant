@@ -5,31 +5,34 @@ import {
   Get,
   Query,
   Req,
-  UseGuards,
 } from '@nestjs/common';
 import {
-  createRestaurantData,
   createRestaurantDto,
   getAllRestaurantsData,
   getAllRestaurantsQueryDto,
-  removeRestaurantData,
   removeRestaurantDto,
   SaleType,
   SortType,
   Tags,
 } from './restaurant.dto';
 import { RestaurantService } from './restaurant.service';
-import { AccessTokenGuard } from '../common/jwtGuard/accessToken.guard';
 import { Request } from 'express';
 import { Roles } from '../common/roleGuard/roles.decorator';
 import { Role } from '../common/roleGuard/role.enum';
-import { UsersService } from '../users/users.service';
+import { ApiHeader, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  removeRestaurantResponse,
+  RestaurantResponse,
+  RestaurantsResponse,
+} from './entities/Restaurant.entity';
 
+@ApiTags('restaurant api')
 @Controller('restaurant')
 export class RestaurantController {
   constructor(private restaurantService: RestaurantService) {}
 
   @Get('/')
+  @ApiResponse({ status: 200, description: '', type: RestaurantsResponse })
   getAllRestaurants(@Query() queryDto: getAllRestaurantsQueryDto) {
     const dto: getAllRestaurantsData = {
       limit: queryDto.limit !== undefined ? Number(queryDto.limit) : 10,
@@ -52,6 +55,12 @@ export class RestaurantController {
 
   @Roles([Role.ADMIN, Role.RES_ADMIN])
   @Get('create')
+  @ApiHeader({
+    name: 'Authorization',
+    description:
+      'Bearer your_access_token - only for users with role ADMIN or RES_ADMIN',
+  })
+  @ApiResponse({ status: 200, type: RestaurantResponse })
   create(@Req() req: Request, @Body() dto: createRestaurantDto) {
     return this.restaurantService.create({
       name: dto.name,
@@ -62,6 +71,12 @@ export class RestaurantController {
 
   @Roles([Role.ADMIN, Role.RES_ADMIN])
   @Get('remove')
+  @ApiHeader({
+    name: 'Authorization',
+    description:
+      'Bearer your_access_token - only for users with role ADMIN or RES_ADMIN',
+  })
+  @ApiResponse({ status: 200, type: removeRestaurantResponse })
   remove(@Req() req: Request, @Body() dto: removeRestaurantDto) {
     return this.restaurantService.remove({
       userId: req.user['id'],

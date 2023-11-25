@@ -3,7 +3,6 @@ import {
   createRestaurantData,
   getAllRestaurantsData,
   removeRestaurantData,
-  Restaurant,
   SaleType,
   SortType,
   TagsArray,
@@ -20,8 +19,6 @@ export class RestaurantService {
     private databaseService: DatabaseService,
     private usersService: UsersService,
   ) {}
-
-  allRestaurantsArray: Restaurant[] = JSON.parse(JSON.stringify([]));
 
   async getAllRestaurants(data: getAllRestaurantsData) {
     const { limit, skip, search, tag, sort, sale } = data;

@@ -1,3 +1,8 @@
+# swagger
+
+localhost:8080/swagger
+
+
 ## auth api
 
 __/auth/login/__" - login user {identifier(login or email)(string), password(string)}
