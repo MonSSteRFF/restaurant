@@ -3,8 +3,8 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
 interface JwtPayload {
-  sub: string;
-  username: string;
+  id: string;
+  login: string;
 }
 
 @Injectable()
