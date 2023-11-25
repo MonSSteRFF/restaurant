@@ -13,7 +13,7 @@
     "dev": "npm run server:dev | npm run client:dev",
     "prod": "npm run server:prod | npm run client:prod",
 
-    "docker": "docker-compose up",
-    "docker:server": "docker-compose up server"
+    "docker": "docker-compose --file docker-compose.yml up",
+    "docker:server": "docker-compose --file docker-compose.yml up server"
   }
 }

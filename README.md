@@ -8,6 +8,7 @@ fullstack application with nest + react for restaurants owners, workers and user
 
         JWT_SECRET_ACCESS_CODE="your_secret_key_number_1"
         JWT_SECRET_REFRESH_CODE="your_secret_key_number_2"
+        CREATE_ADMIN_SECRET_KEY="your_secret_key_number_3"
         DATABASE_URL="file:./database/dev.db"
 
 
@@ -15,9 +16,9 @@ fullstack application with nest + react for restaurants owners, workers and user
 
 ## start in docker
 
+### dev mode
 - start client/server `npm run docker`
 - start server only `npm run docker:server`
-
 
 ## start in local
 
