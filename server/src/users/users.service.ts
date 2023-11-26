@@ -1,4 +1,8 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
 import { DatabaseService } from '../database/database.service';
 import { Role } from '../common/roleGuard/role.enum';
 import { createUserData } from './dto/createUserData.dto';
@@ -11,6 +15,17 @@ export class UsersService {
   constructor(private readonly databaseService: DatabaseService) {}
 
   async create(createUserDto: createUserData, role: Role): Promise<User> {
+    const oldUser = await this.findBy({
+      email: createUserDto.email,
+      login: createUserDto.login,
+    });
+
+    if (oldUser !== null) {
+      throw new BadRequestException(
+        'User with same email or login has been registered',
+      );
+    }
+
     const user = await this.databaseService.user.create({
       data: {
         email: createUserDto.email,
@@ -62,12 +77,18 @@ export class UsersService {
     const user = await this.databaseService.user.findFirst({
       where: {
         OR: [
-          { id: finder.id },
-          { login: finder.login },
-          { email: finder.email },
+          finder.id === undefined ? {} : { id: finder.id },
+          finder.login === undefined ? {} : { login: finder.login },
+          finder.email === undefined ? {} : { email: finder.email },
         ],
       },
     });
+
+    if (user === null) {
+      throw new ForbiddenException(
+        `cannot find user with id:${finder.id}, login:${finder.login}, email:${finder.email}`,
+      );
+    }
 
     return user as User;
   }

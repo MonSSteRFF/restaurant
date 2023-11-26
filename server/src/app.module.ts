@@ -6,6 +6,8 @@ import { DatabaseModule } from './database/database.module';
 import { AppController } from './app.controller';
 import { RestaurantModule } from './restaurant/restaurant.module';
 import { JwtModule } from '@nestjs/jwt';
+import { OrderModule } from './order/order.module';
+import { MenuModule } from './menu/menu.module';
 
 @Module({
   imports: [
@@ -15,6 +17,8 @@ import { JwtModule } from '@nestjs/jwt';
     DatabaseModule,
     RestaurantModule,
     JwtModule.register({}),
+    OrderModule,
+    MenuModule,
   ],
   controllers: [AppController],
 })

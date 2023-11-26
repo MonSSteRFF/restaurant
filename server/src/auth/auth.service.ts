@@ -18,17 +18,6 @@ export class AuthService {
   ) {}
 
   async register(createUserDto: RegisterUserDto, role: Role) {
-    const oldUser = await this.usersService.findBy({
-      email: createUserDto.email,
-      login: createUserDto.login,
-    });
-
-    if (oldUser !== null) {
-      throw new BadRequestException(
-        'User with same email or login has been registered',
-      );
-    }
-
     const user = await this.usersService.create(
       {
         ...createUserDto,

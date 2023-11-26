@@ -6,13 +6,14 @@ import { UsersService } from '../users/users.service';
 import { Role } from '../common/roleGuard/role.enum';
 import { getAllRestaurantsResponse } from './entities/getAllRestaurantsResponse.entity';
 import { restaurant } from './entities/restaurant.entity';
-import { Tags, TagsArray } from './enums/tags.enum';
+import { TagsArray } from './enums/tags.enum';
 import { SaleType } from './enums/saleType.enum';
 import { getAllRestaurantsData } from './dto/getAllRestaurantData.dto';
 import { SortType } from './enums/sortType.enum';
 import { createRestaurantData } from './dto/createRestaurantData.dto';
 import { removeRestaurantData } from './dto/removeRestaurantData.dto';
 import { removeRestaurantResponse } from './entities/removeRestaurantResponse.enity';
+import { separateFrom, separateTo } from '../utils/separate';
 
 @Injectable()
 export class RestaurantService {
@@ -46,36 +47,27 @@ export class RestaurantService {
       }
     };
 
-    const restaurantsArray = await this.databaseService.restaurant.findMany({
+    const restArray = await this.databaseService.restaurant.findMany({
       skip,
       take: limit,
-      orderBy: [{ reviewCount: 'desc' }, { ...orderSort() }],
-      where: { AND: [{ name: { contains: search } }] },
+      orderBy: [{ reviewCount: 'desc', ...orderSort() }],
+      where: {
+        AND: [
+          { name: { contains: search } },
+          sale === SaleType.default ? {} : { sale },
+          { OR: tag.map((tagItem) => ({ tag: { contains: tagItem } })) },
+        ],
+      },
     });
 
-    const filterBySearch = restaurantsArray
-      .filter((item) => {
-        const filterByTag =
-          tag.length > 0
-            ? tag.filter((tagItem) => item.tag.includes(tagItem)).length > 0
-            : true;
-
-        const filterBySale =
-          sale === SaleType.default ? true : item.sale.includes(sale);
-
-        return filterByTag && filterBySale;
-      })
-
-      .sort((a, b) => (a.reviewCount < b.reviewCount ? 1 : -1));
-
     return {
-      data: filterBySearch.map((rest) => ({
+      data: restArray.map((rest) => ({
         ...rest,
-        tag: rest.tag.split(',') as Tags[],
-        sale: rest.sale.split(',') as SaleType[],
+        tag: separateFrom(rest.tag),
+        sale: separateFrom(rest.sale),
       })),
-      allLength: restaurantsArray.length,
-      filteredLength: filterBySearch.length,
+      allLength: await this.databaseService.restaurant.count(),
+      filteredLength: restArray.length,
     };
   }
 
@@ -98,15 +90,15 @@ export class RestaurantService {
     const rest = await this.databaseService.restaurant.create({
       data: {
         name: data.name,
-        tag: data.tag.join(','),
+        tag: separateTo(data.tag),
         ownerUserId: { connect: { id: data.ownerUserId } },
       },
     });
 
     return {
       ...rest,
-      tag: rest.tag.split(',') as Tags[],
-      sale: rest.sale.split(',') as SaleType[],
+      tag: separateFrom(rest.tag),
+      sale: separateFrom(rest.sale),
     };
   }
 
