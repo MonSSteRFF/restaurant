@@ -1,17 +1,18 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import {
-  createRestaurantData,
-  getAllRestaurantsData,
-  removeRestaurantData,
-  SaleType,
-  SortType,
-  TagsArray,
-} from './restaurant.dto';
 import { DatabaseService } from '../database/database.service';
 
 import * as client from '@prisma/client';
 import { UsersService } from '../users/users.service';
 import { Role } from '../common/roleGuard/role.enum';
+import { getAllRestaurantsResponse } from './entities/getAllRestaurantsResponse.entity';
+import { restaurant } from './entities/restaurant.entity';
+import { Tags, TagsArray } from './enums/tags.enum';
+import { SaleType } from './enums/saleType.enum';
+import { getAllRestaurantsData } from './dto/getAllRestaurantData.dto';
+import { SortType } from './enums/sortType.enum';
+import { createRestaurantData } from './dto/createRestaurantData.dto';
+import { removeRestaurantData } from './dto/removeRestaurantData.dto';
+import { removeRestaurantResponse } from './entities/removeRestaurantResponse.enity';
 
 @Injectable()
 export class RestaurantService {
@@ -20,7 +21,9 @@ export class RestaurantService {
     private usersService: UsersService,
   ) {}
 
-  async getAllRestaurants(data: getAllRestaurantsData) {
+  async getAllRestaurants(
+    data: getAllRestaurantsData,
+  ): Promise<getAllRestaurantsResponse> {
     const { limit, skip, search, tag, sort, sale } = data;
 
     const orderSort = (): client.Prisma.RestaurantOrderByWithRelationInput => {
@@ -46,23 +49,8 @@ export class RestaurantService {
     const restaurantsArray = await this.databaseService.restaurant.findMany({
       skip,
       take: limit,
-      orderBy: [
-        {
-          reviewCount: 'desc',
-        },
-        {
-          ...orderSort(),
-        },
-      ],
-      where: {
-        AND: [
-          {
-            name: {
-              contains: search,
-            },
-          },
-        ],
-      },
+      orderBy: [{ reviewCount: 'desc' }, { ...orderSort() }],
+      where: { AND: [{ name: { contains: search } }] },
     });
 
     const filterBySearch = restaurantsArray
@@ -81,13 +69,17 @@ export class RestaurantService {
       .sort((a, b) => (a.reviewCount < b.reviewCount ? 1 : -1));
 
     return {
-      data: filterBySearch,
+      data: filterBySearch.map((rest) => ({
+        ...rest,
+        tag: rest.tag.split(',') as Tags[],
+        sale: rest.sale.split(',') as SaleType[],
+      })),
       allLength: restaurantsArray.length,
       filteredLength: filterBySearch.length,
     };
   }
 
-  async create(data: createRestaurantData) {
+  async create(data: createRestaurantData): Promise<restaurant> {
     data.tag.forEach((tagItem) => {
       if (!TagsArray.includes(tagItem)) {
         throw new BadRequestException(`wrong tag - ${tagItem}`);
@@ -103,16 +95,22 @@ export class RestaurantService {
       );
     }
 
-    return this.databaseService.restaurant.create({
+    const rest = await this.databaseService.restaurant.create({
       data: {
         name: data.name,
         tag: data.tag.join(','),
         ownerUserId: { connect: { id: data.ownerUserId } },
       },
     });
+
+    return {
+      ...rest,
+      tag: rest.tag.split(',') as Tags[],
+      sale: rest.sale.split(',') as SaleType[],
+    };
   }
 
-  async remove(data: removeRestaurantData) {
+  async remove(data: removeRestaurantData): Promise<removeRestaurantResponse> {
     const user = await this.usersService.findById(data.userId);
     const restaurant = await this.databaseService.restaurant.findFirst({
       where: { id: data.removeId },

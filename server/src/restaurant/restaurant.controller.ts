@@ -6,25 +6,21 @@ import {
   Query,
   Req,
 } from '@nestjs/common';
-import {
-  createRestaurantDto,
-  getAllRestaurantsData,
-  getAllRestaurantsQueryDto,
-  removeRestaurantDto,
-  SaleType,
-  SortType,
-  Tags,
-} from './restaurant.dto';
 import { RestaurantService } from './restaurant.service';
 import { Request } from 'express';
 import { Roles } from '../common/roleGuard/roles.decorator';
 import { Role } from '../common/roleGuard/role.enum';
 import { ApiHeader, ApiResponse, ApiTags } from '@nestjs/swagger';
-import {
-  removeRestaurantResponse,
-  RestaurantResponse,
-  RestaurantsResponse,
-} from './entities/Restaurant.entity';
+import { restaurant } from './entities/restaurant.entity';
+import { getAllRestaurantsResponse } from './entities/getAllRestaurantsResponse.entity';
+import { removeRestaurantResponse } from './entities/removeRestaurantResponse.enity';
+import { getAllRestaurantsQueryDto } from './dto/getAllRestaurantQuery.dto';
+import { getAllRestaurantsData } from './dto/getAllRestaurantData.dto';
+import { Tags } from './enums/tags.enum';
+import { SortType } from './enums/sortType.enum';
+import { SaleType } from './enums/saleType.enum';
+import { createRestaurantBodyDto } from './dto/createRestaurantBody.dto';
+import { removeRestaurantBodyDto } from './dto/removeRestaurantBody.dto';
 
 @ApiTags('restaurant api')
 @Controller('restaurant')
@@ -32,7 +28,11 @@ export class RestaurantController {
   constructor(private restaurantService: RestaurantService) {}
 
   @Get('/')
-  @ApiResponse({ status: 200, description: '', type: RestaurantsResponse })
+  @ApiResponse({
+    status: 200,
+    description: '',
+    type: getAllRestaurantsResponse,
+  })
   getAllRestaurants(@Query() queryDto: getAllRestaurantsQueryDto) {
     const dto: getAllRestaurantsData = {
       limit: queryDto.limit !== undefined ? Number(queryDto.limit) : 10,
@@ -60,8 +60,8 @@ export class RestaurantController {
     description:
       'Bearer your_access_token - only for users with role ADMIN or RES_ADMIN',
   })
-  @ApiResponse({ status: 200, type: RestaurantResponse })
-  create(@Req() req: Request, @Body() dto: createRestaurantDto) {
+  @ApiResponse({ status: 200, type: restaurant })
+  create(@Req() req: Request, @Body() dto: createRestaurantBodyDto) {
     return this.restaurantService.create({
       name: dto.name,
       tag: dto.tag,
@@ -77,7 +77,7 @@ export class RestaurantController {
       'Bearer your_access_token - only for users with role ADMIN or RES_ADMIN',
   })
   @ApiResponse({ status: 200, type: removeRestaurantResponse })
-  remove(@Req() req: Request, @Body() dto: removeRestaurantDto) {
+  remove(@Req() req: Request, @Body() dto: removeRestaurantBodyDto) {
     return this.restaurantService.remove({
       userId: req.user['id'],
       removeId: dto.removeId,

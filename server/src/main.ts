@@ -3,7 +3,24 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
+const checkProcessEnv = () => {
+  const config = [
+    process.env.JWT_SECRET_ACCESS_CODE,
+    process.env.JWT_SECRET_REFRESH_CODE,
+    process.env.CREATE_ADMIN_SECRET_KEY,
+    process.env.DATABASE_URL,
+  ];
+
+  config.forEach((variable) => {
+    if (variable === null || variable === undefined || variable === '') {
+      throw new Error(`variable ${variable} has null or undefined or ''`);
+    }
+  });
+};
+
 async function bootstrap() {
+  checkProcessEnv();
+
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe({ stopAtFirstError: true }));
 
