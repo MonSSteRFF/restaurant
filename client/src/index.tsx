@@ -4,7 +4,9 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 
-import Main from '@/Main';
+import AppRouter from '@/AppRouter';
+import IndexPopUps from '@/components/popUps/indexPopUps';
+import ReloadPromt from '@/components/ReloadPromt';
 import { RootModelContextProvider } from '@/store/RootModel';
 
 const root = document.getElementById('root') as HTMLElement;
@@ -12,7 +14,9 @@ const root = document.getElementById('root') as HTMLElement;
 createRoot(root).render(
   <RootModelContextProvider>
     <BrowserRouter>
-      <Main />
+      <ReloadPromt />
+      <AppRouter />
+      <IndexPopUps />
     </BrowserRouter>
   </RootModelContextProvider>,
 );

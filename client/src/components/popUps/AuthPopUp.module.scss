@@ -1,0 +1,32 @@
+
+.background {
+  background-color: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(5px);
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transition: .4s;
+
+  &_hidden {
+    background-color: rgba(0, 0, 0, 0);
+    backdrop-filter: blur(0px);
+    pointer-events: none;
+  }
+}
+
+
+
+.authPopUp {
+  position: fixed;
+  top: 20px;
+  bottom: 20px;
+  background-color: #ffffff;
+  border-radius: 20px;
+  padding: 20px;
+  width: 500px;
+  transition: .4s;
+
+
+}

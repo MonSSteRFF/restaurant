@@ -1,0 +1,35 @@
+@use '@/styles/typography' as *;
+
+.aside {
+  padding: 0 20px;
+  max-width: 300px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  position: sticky;
+  top: 0;
+  max-height: 100dvh;
+}
+
+.logotype{
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+
+  width: 100%;
+  margin-bottom: 20px;
+  background-color: #ffffff;
+  cursor: pointer;
+  padding: 30px 15px 15px 15px;
+
+  @extend %ss_600_18_22;
+}
+
+.categories {
+  border-radius: 20px;
+  width: 100%;
+  padding: 15px;
+  margin-bottom: 20px;
+  background-color: #ffffff;
+  display: flex;
+  flex: 1;
+}

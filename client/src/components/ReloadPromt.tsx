@@ -1,14 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useRegisterSW } from 'virtual:pwa-register/react';
 
-import AppRouter from '@/AppRouter';
+import styles from './ReloadPromt.module.scss';
+
 const intervalMS = 60 * 60 * 1000;
 
-const Main = () => {
-  // replaced dynamically
-  // replaced dyanmicaly
-  const reloadSW = '__RELOAD_SW__';
-
+const ReloadPromt = () => {
   const {
     offlineReady: [offlineReady, setOfflineReady],
     needRefresh: [needRefresh, setNeedRefresh],
@@ -46,34 +43,36 @@ const Main = () => {
   };
 
   return (
-    <>
-      <div className="ReloadPrompt-container">
-        {(offlineReady || needRefresh) && (
-          <div className="ReloadPrompt-toast">
-            <div className="ReloadPrompt-message">
-              {offlineReady ? (
-                <span>App ready to work offline</span>
-              ) : (
-                <span>New content available, click on reload button to update.</span>
-              )}
-            </div>
+    (offlineReady || needRefresh) && (
+      <div className={styles.reloadPromt}>
+        <div className={styles.reloadPromt_toast}>
+          {offlineReady ? (
+            <p className={styles.reloadPromt_title}>App ready to work offline</p>
+          ) : (
+            <p className={styles.reloadPromt_title}>
+              New content available, <br />
+              click on reload button to update.
+            </p>
+          )}
+
+          <div className={styles.reloadPromt_buttons}>
             {needRefresh && (
               <button
-                className="ReloadPrompt-toast-button"
+                className={styles.reloadPromt_button}
                 onClick={() => updateServiceWorker(true)}
               >
                 Reload
               </button>
             )}
-            <button className="ReloadPrompt-toast-button" onClick={() => close()}>
+
+            <button className={styles.reloadPromt_button} onClick={() => close()}>
               Close
             </button>
           </div>
-        )}
+        </div>
       </div>
-      <AppRouter />
-    </>
+    )
   );
 };
 
-export default Main;
+export default ReloadPromt;

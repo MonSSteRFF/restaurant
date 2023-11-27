@@ -1,6 +1,20 @@
 @use '@/styles/uiKit' as *;
 
 .main {
-  @extend %container;
-  padding-top: 40px;
+  display: flex;
+  justify-content: space-between;
+  background-color: #f5f5f5;
+  min-height: 100dvh;
+}
+
+.section {
+  flex: 1;
+  border-radius: 20px;
+  margin-bottom: 20px;
+
+  &_content {
+    background-color: #ffffff;
+    padding: 15px;
+    border-radius: 20px;
+  }
 }

@@ -1,12 +1,17 @@
 import React, { createContext, useContext } from 'react';
 
-import CounterModel from '@/store/models/CounterModel';
+import Api from '@/controllers/Api';
+import PopUpsService from '@/store/modalPopUps/PopUpsService';
+import AuthService from '@/store/services/AuthService';
 
-class RootModel {
-  counterModel!: CounterModel;
+export class RootModel {
+  authService!: AuthService;
+
+  popUpsService!: PopUpsService;
 
   constructor() {
-    this.counterModel = new CounterModel();
+    this.authService = new AuthService(Api.auth);
+    this.popUpsService = new PopUpsService();
   }
 }
 
@@ -18,7 +23,9 @@ const rootModel = new RootModel();
 
 const RootModelContext = createContext<RootModel>(rootModel);
 
-const RootModelContextProvider: React.FC<{ children: React.ReactNode }> = (props) => {
+export const RootModelContextProvider: React.FC<{ children: React.ReactNode }> = (
+  props,
+) => {
   return (
     <RootModelContext.Provider value={rootModel}>
       {props.children}
@@ -26,7 +33,7 @@ const RootModelContextProvider: React.FC<{ children: React.ReactNode }> = (props
   );
 };
 
-function useRootModel<Result>(selector: (value: RootModel) => Result) {
+export function useRootModel<Result>(selector: (value: RootModel) => Result) {
   const store = useContext(RootModelContext);
 
   if (store === undefined || store === null) {
@@ -35,6 +42,3 @@ function useRootModel<Result>(selector: (value: RootModel) => Result) {
 
   return selector(store);
 }
-
-export { RootModelContextProvider, useRootModel };
-export default RootModel;

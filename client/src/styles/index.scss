@@ -6,8 +6,12 @@
   outline: none;
   border: none;
   background: none;
+  list-style: none;
+  color: #000;
+  text-decoration: none;
 }
 
-:root {
-  --black: #000;
+a,button{
+  cursor: pointer;
 }
+
